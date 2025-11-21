@@ -23,7 +23,7 @@
     "dist"
   ],
   "scripts": {
-    "start:example-server0": "tsx examples/example-server.ts",
+    "start:example-server0": "bun examples/example-server.ts",
     "start:example-server": "cd ../openai-apps-sdk-examples && concurrently \"npm run serve\" \"cd pizzaz_server_node && PORT=3001 npm start\"",
     "start:sandbox-proxy": "python3 sandbox_proxy.py",
     "start": "npm run build && npm run start:example-server",
@@ -46,10 +46,8 @@
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.20.1",
     "bun": "^1.3.2",
-    "esbuild": "~0.19.10",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
-    "tsx": "^4.20.6",
     "typescript": "5.7.2",
     "zod": "^3.25"
   }
