@@ -5,14 +5,14 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "rm -rf dist && VITE_ENTRY=ui-vanilla vite build && VITE_ENTRY=ui-react vite build",
+    "build": "rm -rf dist && VITE_ENTRY=ui-raw vite build && VITE_ENTRY=ui-vanilla vite build && VITE_ENTRY=ui-react vite build",
     "preview": "vite preview",
     "server": "bun server.ts",
     "start": "npm run build && npm run server"
   },
   "dependencies": {
     "@modelcontextprotocol/ext-apps": "../..",
-    "@modelcontextprotocol/sdk": "^1.20.1",
+    "@modelcontextprotocol/sdk": "^1.22.0",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
     "zod": "^3.25.0"
