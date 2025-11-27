@@ -1,6 +1,6 @@
 # @modelcontextprotocol/ext-apps
 
-[![API Documentation](https://img.shields.io/badge/docs-API%20Reference-blue)](https://modelcontextprotocol.github.io/ext-apps/)
+[![API Documentation](https://img.shields.io/badge/docs-API%20Reference-blue)](https://modelcontextprotocol.github.io/ext-apps/api/)
 
 This repo contains the SDK and [specification](https://github.com/modelcontextprotocol/ext-apps/blob/main/specification/draft/apps.mdx) for MCP Apps Extension ([SEP-1865](https://github.com/modelcontextprotocol/modelcontextprotocol/pull/1865)).
 
@@ -14,14 +14,14 @@ This SDK serves two audiences:
 
 Build interactive UIs that run inside MCP-enabled chat clients.
 
-- **SDK for Apps**: `@modelcontextprotocol/ext-apps` — [API Docs](https://modelcontextprotocol.github.io/ext-apps/modules/_modelcontextprotocol_ext_apps.html)
-- **React hooks**: `@modelcontextprotocol/ext-apps/react` — [API Docs](https://modelcontextprotocol.github.io/ext-apps/modules/_modelcontextprotocol_ext_apps_react.html)
+- **SDK for Apps**: `@modelcontextprotocol/ext-apps` — [API Docs](https://modelcontextprotocol.github.io/ext-apps/api/modules/app.html)
+- **React hooks**: `@modelcontextprotocol/ext-apps/react` — [API Docs](https://modelcontextprotocol.github.io/ext-apps/api/modules/_modelcontextprotocol_ext-apps_react.html)
 
 ### Host Developers
 
 Embed and communicate with MCP Apps in your chat application.
 
-- **SDK for Hosts**: `@modelcontextprotocol/ext-apps/app-bridge` — [API Docs](https://modelcontextprotocol.github.io/ext-apps/modules/_modelcontextprotocol_ext_apps_app_bridge.html)
+- **SDK for Hosts**: `@modelcontextprotocol/ext-apps/app-bridge` — [API Docs](https://modelcontextprotocol.github.io/ext-apps/api/modules/app-bridge.html)
 
 There's no _supported_ host implementation in this repo (beyond the [examples/simple-host](https://github.com/modelcontextprotocol/ext-apps/tree/main/examples/simple-host) example).
 
@@ -68,6 +68,6 @@ Then open http://localhost:8080/
 
 ## Resources
 
-- [API Documentation](https://modelcontextprotocol.github.io/ext-apps/)
+- [API Documentation](https://modelcontextprotocol.github.io/ext-apps/api/)
 - [Draft Specification](https://github.com/modelcontextprotocol/ext-apps/blob/main/specification/draft/apps.mdx)
 - [SEP-1865 Discussion](https://github.com/modelcontextprotocol/modelcontextprotocol/pull/1865)
