@@ -106,9 +106,9 @@ async function getUiResourceHtml(serverInfo: ServerInfo, uri: string): Promise<s
 
   const content = resource.contents[0];
 
-  // Per the MCP App specification, "text/html+mcp" signals this resource is
-  // indeed for an MCP App UI.
-  if (content.mimeType !== "text/html+mcp") {
+  // Per the MCP App specification, "text/html;profile=mcp-app" signals this
+  // resource is indeed for an MCP App UI.
+  if (content.mimeType !== "text/html;profile=mcp-app") {
     throw new Error(`Unsupported MIME type: ${content.mimeType}`);
   }
 

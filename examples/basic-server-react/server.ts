@@ -51,9 +51,9 @@ const server = new McpServer({
 
       return {
         contents: [
-          // Per the MCP App specification, "text/html+mcp" signals to the Host
-          // that this resource is indeed for an MCP App UI.
-          { uri: resourceUri, mimeType: "text/html+mcp", text: html },
+          // Per the MCP App specification, "text/html;profile=mcp-app" signals
+          // to the Host that this resource is indeed for an MCP App UI.
+          { uri: resourceUri, mimeType: "text/html;profile=mcp-app", text: html },
         ],
       };
     },

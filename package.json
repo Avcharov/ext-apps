@@ -29,7 +29,7 @@
     "build": "bun build.bun.ts",
     "build:all": "npm run build && npm run examples:build",
     "test": "bun test",
-    "examples:build": "concurrently --kill-others-on-fail 'npm run --workspace=examples/basic-host build' 'npm run --workspace=examples/basic-server-react build' 'npm run --workspace=examples/basic-server-vanillajs build'",
+    "examples:build": "find examples -maxdepth 1 -mindepth 1 -type d -exec printf '%s\\0' 'npm run --workspace={} build' ';' | xargs -0 concurrently --kill-others-on-fail",
     "examples:start": "NODE_ENV=development npm run build && concurrently 'npm run examples:start:basic-host' 'npm run examples:start:basic-server-react'",
     "examples:start:basic-host": "npm run --workspace=examples/basic-host start",
     "examples:start:basic-server-react": "npm run --workspace=examples/basic-server-react start",
