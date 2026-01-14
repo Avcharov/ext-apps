@@ -31,6 +31,7 @@ import {
   ReadResourceResultSchema,
   ResourceListChangedNotification,
   ResourceListChangedNotificationSchema,
+  Tool,
   ToolListChangedNotification,
   ToolListChangedNotificationSchema,
 } from "@modelcontextprotocol/sdk/types.js";
@@ -107,9 +108,7 @@ export { PostMessageTransport } from "./message-transport";
  * });
  * ```
  */
-export function getToolUiResourceUri(tool: {
-  _meta?: Record<string, unknown>;
-}): string | undefined {
+export function getToolUiResourceUri(tool: Partial<Tool>): string | undefined {
   // Try new nested format first: _meta.ui.resourceUri
   const uiMeta = tool._meta?.ui as { resourceUri?: unknown } | undefined;
   let uri: unknown = uiMeta?.resourceUri;
