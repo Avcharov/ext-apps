@@ -16,7 +16,8 @@ import {
 import { randomUUID } from "node:crypto";
 import type { CallToolResult } from "@modelcontextprotocol/sdk/types.js";
 import type { McpUiHostContext } from "../src/types.js";
-import { useApp, useHostStyles } from "../src/react/index.js";
+import { useEffect, useState } from "react";
+import { useApp } from "../src/react/index.js";
 import { registerAppTool } from "../src/server/index.js";
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
@@ -147,10 +148,10 @@ function chunkedDataClient(app: App, resourceId: string) {
 }
 
 /**
- * Example: Unified host styling (theme, CSS variables, fonts)
+ * Example: Adapting to host context (theme, CSS variables, fonts, safe areas)
  */
-function hostStylingVanillaJs(app: App) {
-  //#region hostStylingVanillaJs
+function hostContextVanillaJs(app: App, mainEl: HTMLElement) {
+  //#region hostContextVanillaJs
   function applyHostContext(ctx: McpUiHostContext) {
     if (ctx.theme) {
       applyDocumentTheme(ctx.theme);
@@ -161,48 +162,81 @@ function hostStylingVanillaJs(app: App) {
     if (ctx.styles?.css?.fonts) {
       applyHostFonts(ctx.styles.css.fonts);
     }
+    if (ctx.safeAreaInsets) {
+      mainEl.style.paddingTop = `${ctx.safeAreaInsets.top}px`;
+      mainEl.style.paddingRight = `${ctx.safeAreaInsets.right}px`;
+      mainEl.style.paddingBottom = `${ctx.safeAreaInsets.bottom}px`;
+      mainEl.style.paddingLeft = `${ctx.safeAreaInsets.left}px`;
+    }
   }
 
   // Apply when host context changes
   app.onhostcontextchanged = applyHostContext;
 
-  // Apply initial styles after connecting
+  // Apply initial context after connecting
   app.connect().then(() => {
     const ctx = app.getHostContext();
     if (ctx) {
       applyHostContext(ctx);
     }
   });
-  //#endregion hostStylingVanillaJs
+  //#endregion hostContextVanillaJs
 }
 
 /**
- * Example: Host styling with React (CSS variables, theme, fonts)
+ * Example: Adapting to host context with React (CSS variables, theme, fonts, safe areas)
  */
-function hostStylingReact() {
-  //#region hostStylingReact
+function hostContextReact() {
+  //#region hostContextReact
   function MyApp() {
+    const [hostContext, setHostContext] = useState<McpUiHostContext>();
+
     const { app } = useApp({
       appInfo: { name: "MyApp", version: "1.0.0" },
       capabilities: {},
+      onAppCreated: (app) => {
+        app.onhostcontextchanged = (ctx) => {
+          setHostContext((prev) => ({ ...prev, ...ctx }));
+        };
+      },
     });
 
-    // Apply all host styles (variables, theme, fonts)
-    useHostStyles(app, app?.getHostContext());
+    // Set initial host context after connection
+    useEffect(() => {
+      if (app) {
+        setHostContext(app.getHostContext());
+      }
+    }, [app]);
+
+    // Apply styles when host context changes
+    useEffect(() => {
+      if (hostContext?.theme) {
+        applyDocumentTheme(hostContext.theme);
+      }
+      if (hostContext?.styles?.variables) {
+        applyHostStyleVariables(hostContext.styles.variables);
+      }
+      if (hostContext?.styles?.css?.fonts) {
+        applyHostFonts(hostContext.styles.css.fonts);
+      }
+    }, [hostContext]);
 
     return (
       <div
         style={{
           background: "var(--color-background-primary)",
           fontFamily: "var(--font-sans)",
+          paddingTop: hostContext?.safeAreaInsets?.top,
+          paddingRight: hostContext?.safeAreaInsets?.right,
+          paddingBottom: hostContext?.safeAreaInsets?.bottom,
+          paddingLeft: hostContext?.safeAreaInsets?.left,
         }}
       >
-        <p>Styled with host CSS variables and fonts</p>
-        <p className="theme-aware">Uses [data-theme] selectors</p>
+        Styled with host CSS variables, fonts, and safe area insets
       </div>
     );
   }
-  //#endregion hostStylingReact
+  //#endregion hostContextReact
 }
 
 /**
@@ -284,9 +318,9 @@ function visibilityBasedPause(
   const observer = new IntersectionObserver((entries) => {
     entries.forEach((entry) => {
       if (entry.isIntersecting) {
-        animation.play();
+        animation.play(); // or startPolling(), etc
       } else {
-        animation.pause();
+        animation.pause(); // or stopPolling(), etc
       }
     });
   });
@@ -304,8 +338,8 @@ function visibilityBasedPause(
 // Suppress unused variable warnings
 void chunkedDataServer;
 void chunkedDataClient;
-void hostStylingVanillaJs;
-void hostStylingReact;
+void hostContextVanillaJs;
+void hostContextReact;
 void persistViewStateServer;
 void persistViewState;
 void visibilityBasedPause;

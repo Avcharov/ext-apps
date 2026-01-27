@@ -158,7 +158,7 @@ loadDataInChunks(resourceId, (loaded, total) => {
 
 _See [`examples/pdf-server/`](https://github.com/modelcontextprotocol/ext-apps/tree/main/examples/pdf-server) for a full implementation of this pattern._
 
-## Giving errors back to model
+## Giving errors back to the model
 
 **Server-side**: Tool handler validates inputs and returns `{ isError: true, content: [...] }`. The model receives this error through the normal tool call response.
 
@@ -182,18 +182,19 @@ try {
 }
 ```
 
-## Matching host styling (CSS variables, theme, and fonts)
+## Adapting to host context (theme, styling, fonts, and safe areas)
 
-Use the SDK's style helpers to apply host styling, then reference them in your CSS:
+The host provides context about its environment via {@link types!McpUiHostContext `McpUiHostContext`}. Use this to adapt your app's appearance and layout:
 
-- **CSS variables** — Use `var(--color-background-primary)`, etc. in your CSS
 - **Theme** — Use `[data-theme="dark"]` selectors or `light-dark()` function for theme-aware styles
+- **CSS variables** — Use `var(--color-background-primary)`, etc. in your CSS (see {@link types!McpUiStyleVariableKey `McpUiStyleVariableKey`} for a full list)
 - **Fonts** — Use `var(--font-sans)` or `var(--font-mono)` with fallbacks (e.g., `font-family: var(--font-sans, system-ui, sans-serif)`)
+- **Safe area insets** — Apply padding to avoid device notches, rounded corners, or system UI overlays
 
 **Vanilla JS:**
 
 <!-- prettier-ignore -->
-```tsx source="./patterns.tsx#hostStylingVanillaJs"
+```tsx source="./patterns.tsx#hostContextVanillaJs"
 function applyHostContext(ctx: McpUiHostContext) {
   if (ctx.theme) {
     applyDocumentTheme(ctx.theme);
@@ -204,12 +205,18 @@ function applyHostContext(ctx: McpUiHostContext) {
   if (ctx.styles?.css?.fonts) {
     applyHostFonts(ctx.styles.css.fonts);
   }
+  if (ctx.safeAreaInsets) {
+    mainEl.style.paddingTop = `${ctx.safeAreaInsets.top}px`;
+    mainEl.style.paddingRight = `${ctx.safeAreaInsets.right}px`;
+    mainEl.style.paddingBottom = `${ctx.safeAreaInsets.bottom}px`;
+    mainEl.style.paddingLeft = `${ctx.safeAreaInsets.left}px`;
+  }
 }
 
 // Apply when host context changes
 app.onhostcontextchanged = applyHostContext;
 
-// Apply initial styles after connecting
+// Apply initial context after connecting
 app.connect().then(() => {
   const ctx = app.getHostContext();
   if (ctx) {
@@ -221,25 +228,52 @@ app.connect().then(() => {
 **React:**
 
 <!-- prettier-ignore -->
-```tsx source="./patterns.tsx#hostStylingReact"
+```tsx source="./patterns.tsx#hostContextReact"
 function MyApp() {
+  const [hostContext, setHostContext] = useState<McpUiHostContext>();
+
   const { app } = useApp({
     appInfo: { name: "MyApp", version: "1.0.0" },
     capabilities: {},
+    onAppCreated: (app) => {
+      app.onhostcontextchanged = (ctx) => {
+        setHostContext((prev) => ({ ...prev, ...ctx }));
+      };
+    },
   });
 
-  // Apply all host styles (variables, theme, fonts)
-  useHostStyles(app, app?.getHostContext());
+  // Set initial host context after connection
+  useEffect(() => {
+    if (app) {
+      setHostContext(app.getHostContext());
+    }
+  }, [app]);
+
+  // Apply styles when host context changes
+  useEffect(() => {
+    if (hostContext?.theme) {
+      applyDocumentTheme(hostContext.theme);
+    }
+    if (hostContext?.styles?.variables) {
+      applyHostStyleVariables(hostContext.styles.variables);
+    }
+    if (hostContext?.styles?.css?.fonts) {
+      applyHostFonts(hostContext.styles.css.fonts);
+    }
+  }, [hostContext]);
 
   return (
     <div
       style={{
         background: "var(--color-background-primary)",
         fontFamily: "var(--font-sans)",
+        paddingTop: hostContext?.safeAreaInsets?.top,
+        paddingRight: hostContext?.safeAreaInsets?.right,
+        paddingBottom: hostContext?.safeAreaInsets?.bottom,
+        paddingLeft: hostContext?.safeAreaInsets?.left,
       }}
     >
-      <p>Styled with host CSS variables and fonts</p>
-      <p className="theme-aware">Uses [data-theme] selectors</p>
+      Styled with host CSS variables, fonts, and safe area insets
     </div>
   );
 }
@@ -247,17 +281,18 @@ function MyApp() {
 
 _See [`examples/basic-server-vanillajs/`](https://github.com/modelcontextprotocol/ext-apps/tree/main/examples/basic-server-vanillajs) and [`examples/basic-server-react/`](https://github.com/modelcontextprotocol/ext-apps/tree/main/examples/basic-server-react) for full implementations of this pattern._
 
-## Entering / Exiting fullscreen
+## Entering / exiting fullscreen
 
 Toggle fullscreen mode by calling {@link app!App.requestDisplayMode `requestDisplayMode`}:
 
 <!-- prettier-ignore -->
 ```ts source="../src/app.examples.ts#App_requestDisplayMode_toggle"
+const container = document.getElementById("main")!;
 const ctx = app.getHostContext();
-if (ctx?.availableDisplayModes?.includes("fullscreen")) {
-  const target = ctx.displayMode === "fullscreen" ? "inline" : "fullscreen";
-  const result = await app.requestDisplayMode({ mode: target });
-  console.log("Now in:", result.mode);
+const newMode = ctx?.displayMode === "inline" ? "fullscreen" : "inline";
+if (ctx?.availableDisplayModes?.includes(newMode)) {
+  const result = await app.requestDisplayMode({ mode: newMode });
+  container.classList.toggle("fullscreen", result.mode === "fullscreen");
 }
 ```
 
@@ -265,17 +300,38 @@ Listen for display mode changes via {@link app!App.onhostcontextchanged `onhostc
 
 <!-- prettier-ignore -->
 ```ts source="../src/app.examples.ts#App_onhostcontextchanged_respondToDisplayMode"
-app.onhostcontextchanged = (params) => {
-  if (params.displayMode) {
-    const isFullscreen = params.displayMode === "fullscreen";
-    document.body.classList.toggle("fullscreen", isFullscreen);
+app.onhostcontextchanged = (ctx) => {
+  // Adjust to current display mode
+  if (ctx.displayMode) {
+    const container = document.getElementById("main")!;
+    const isFullscreen = ctx.displayMode === "fullscreen";
+    container.classList.toggle("fullscreen", isFullscreen);
+  }
+
+  // Adjust display mode controls
+  if (ctx.availableDisplayModes) {
+    const fullscreenBtn = document.getElementById("fullscreen-btn")!;
+    const canFullscreen = ctx.availableDisplayModes.includes("fullscreen");
+    fullscreenBtn.style.display = canFullscreen ? "block" : "none";
   }
 };
 ```
 
+In fullscreen mode, remove the container's border radius so content extends to the viewport edges:
+
+```css
+#main {
+  border-radius: var(--border-radius-lg);
+
+  &.fullscreen {
+    border-radius: 0;
+  }
+}
+```
+
 _See [`examples/shadertoy-server/`](https://github.com/modelcontextprotocol/ext-apps/tree/main/examples/shadertoy-server) for a full implementation of this pattern._
 
-## Passing contextual information from the App to the Model
+## Passing contextual information from the App to the model
 
 Use {@link app!App.updateModelContext `updateModelContext`} to keep the model informed about what the user is viewing or interacting with. Structure the content with YAML frontmatter for easy parsing:
 
@@ -389,9 +445,9 @@ app.ontoolresult = (result) => {
 
 _See [`examples/map-server/`](https://github.com/modelcontextprotocol/ext-apps/tree/main/examples/map-server) for a full implementation of this pattern._
 
-## Pausing computation-heavy views when out of view
+## Pausing computation-heavy views when offscreen
 
-Views with animations, WebGL rendering, or polling can consume significant CPU/GPU even when scrolled out of view. Use [`IntersectionObserver`](https://developer.mozilla.org/en-US/docs/Web/API/Intersection_Observer_API) to pause expensive operations when the view isn't visible:
+Views with animations, WebGL rendering, or polling can consume significant CPU/GPU even when scrolled offscreen. Use [`IntersectionObserver`](https://developer.mozilla.org/en-US/docs/Web/API/Intersection_Observer_API) to pause expensive operations when the view isn't visible:
 
 <!-- prettier-ignore -->
 ```tsx source="./patterns.tsx#visibilityBasedPause"
@@ -399,9 +455,9 @@ Views with animations, WebGL rendering, or polling can consume significant CPU/G
 const observer = new IntersectionObserver((entries) => {
   entries.forEach((entry) => {
     if (entry.isIntersecting) {
-      animation.play();
+      animation.play(); // or startPolling(), etc
     } else {
-      animation.pause();
+      animation.pause(); // or stopPolling(), etc
     }
   });
 });
@@ -419,31 +475,24 @@ _See [`examples/shadertoy-server/`](https://github.com/modelcontextprotocol/ext-
 
 ## Lowering perceived latency
 
-Use {@link app!App.ontoolinputpartial `ontoolinputpartial`} to receive streaming tool arguments as they arrive, allowing you to show a loading preview before the complete input is available.
+Use {@link app!App.ontoolinputpartial `ontoolinputpartial`} to receive streaming tool arguments as they arrive. This lets you show a loading preview before the complete input is available, such as streaming code into a `<pre>` tag before executing it, partially rendering a table as data arrives, or incrementally populating a chart.
 
 <!-- prettier-ignore -->
 ```ts source="../src/app.examples.ts#App_ontoolinputpartial_progressiveRendering"
-let toolInputs: Record<string, unknown> | null = null;
-let toolInputsPartial: Record<string, unknown> | null = null;
+const codePreview = document.querySelector<HTMLPreElement>("#code-preview")!;
+const canvas = document.querySelector<HTMLCanvasElement>("#canvas")!;
 
 app.ontoolinputpartial = (params) => {
-  toolInputsPartial = params.arguments as Record<string, unknown>;
-  render();
+  codePreview.textContent = (params.arguments?.code as string) ?? "";
+  codePreview.style.display = "block";
+  canvas.style.display = "none";
 };
 
 app.ontoolinput = (params) => {
-  toolInputs = params.arguments as Record<string, unknown>;
-  toolInputsPartial = null;
-  render();
+  codePreview.style.display = "none";
+  canvas.style.display = "block";
+  render(params.arguments?.code as string);
 };
-
-function render() {
-  if (toolInputs) {
-    renderFinalUI(toolInputs);
-  } else {
-    renderLoadingUI(toolInputsPartial); // e.g., shimmer with partial preview
-  }
-}
 ```
 
 > [!IMPORTANT]
