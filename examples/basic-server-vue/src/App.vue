@@ -118,7 +118,7 @@ async function handleOpenLink() {
     <p class="notice">Watch activity in the DevTools console!</p>
 
     <div class="action">
-      <p><strong>Server Time:</strong> <code id="server-time">{{ serverTime }}</code></p>
+      <p><strong>Server Time:</strong> <code class="server-time">{{ serverTime }}</code></p>
       <button @click="handleGetTime">Get Server Time</button>
     </div>
 
@@ -213,7 +213,7 @@ async function handleOpenLink() {
 }
 
 /* Server time fills remaining width for consistent E2E screenshot masking */
-:deep(#server-time) {
+.server-time {
   flex: 1;
   min-width: 0;
 }

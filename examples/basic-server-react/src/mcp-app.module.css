@@ -70,3 +70,9 @@
     font-style: normal;
   }
 }
+
+/* Server time fills remaining width for consistent E2E screenshot masking */
+.serverTime {
+  flex: 1;
+  min-width: 0;
+}
