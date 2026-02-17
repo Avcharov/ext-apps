@@ -20,7 +20,7 @@
 
 <p align="center">
   <a href="https://github.com/modelcontextprotocol/ext-apps/actions/workflows/ci.yml"><img src="https://github.com/modelcontextprotocol/ext-apps/actions/workflows/ci.yml/badge.svg" alt="CI"></a>
-  <a href="LICENSE"><img src="https://img.shields.io/github/license/modelcontextprotocol/ext-apps" alt="License"></a>
+  <a href="LICENSE"><img src="https://img.shields.io/badge/license-Apache%202.0-blue" alt="License: Apache 2.0"></a>
   <a href="https://www.npmjs.com/package/@modelcontextprotocol/ext-apps"><img src="https://img.shields.io/npm/v/@modelcontextprotocol/ext-apps.svg" alt="npm version"></a>
   <a href="https://www.npmjs.com/package/@modelcontextprotocol/ext-apps"><img src="https://img.shields.io/npm/dm/@modelcontextprotocol/ext-apps.svg" alt="npm downloads"></a>
   <a href="https://github.com/modelcontextprotocol/ext-apps"><img src="https://img.shields.io/github/stars/modelcontextprotocol/ext-apps" alt="GitHub stars"></a>
