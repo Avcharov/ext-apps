@@ -21,9 +21,12 @@
 </p>
 
 <p align="center">
+  <a href="https://www.npmjs.com/package/@modelcontextprotocol/ext-apps"><img src="https://img.shields.io/npm/v/@modelcontextprotocol/ext-apps.svg" alt="npm version"></a>
+  <a href="https://modelcontextprotocol.github.io/ext-apps/api/"><img src="https://img.shields.io/badge/docs-API%20Reference-blue" alt="API Documentation"></a>
+</p>
 
-[![npm version](https://img.shields.io/npm/v/@modelcontextprotocol/ext-apps.svg)](https://www.npmjs.com/package/@modelcontextprotocol/ext-apps) [![API Documentation](https://img.shields.io/badge/docs-API%20Reference-blue)](https://modelcontextprotocol.github.io/ext-apps/api/)
-
+<p align="center">
+  <img src="media/claude-colorpicker-apps.gif" alt="MCP Apps demo" width="600">
 </p>
 
 ## Specification
