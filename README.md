@@ -35,6 +35,7 @@
 ## Table of Contents
 
 - [Build with Agent Skills](#build-with-agent-skills)
+- [Supported Clients](#supported-clients)
 - [Why MCP Apps?](#why-mcp-apps)
 - [How It Works](#how-it-works)
 - [Getting Started](#getting-started)
@@ -67,6 +68,19 @@ The fastest way to build an MCP App is to let your AI coding agent do it. This r
 **Other agents** — any AI coding agent that supports [Agent Skills](https://agentskills.io/) can use these skills. See the [agent skills guide](./docs/agent-skills.md) for manual installation instructions.
 
 Once installed, verify by asking your agent _"What skills do you have?"_ — you should see `create-mcp-app`, `migrate-oai-app`, `add-app-to-server`, and `convert-web-app` in the list. Then just ask it to create or migrate an app and it will guide you through the rest.
+
+## Supported Clients
+
+<p align="center">
+  <a href="https://claude.ai"><img src="https://img.shields.io/badge/Claude-web-d97706?logo=anthropic&logoColor=white" alt="Claude"></a>
+  <a href="https://claude.ai/download"><img src="https://img.shields.io/badge/Claude_Desktop-app-d97706?logo=anthropic&logoColor=white" alt="Claude Desktop"></a>
+  <a href="https://code.visualstudio.com/insiders"><img src="https://img.shields.io/badge/VS_Code-Insiders-007ACC?logo=visualstudiocode&logoColor=white" alt="VS Code Insiders"></a>
+  <a href="https://block.github.io/goose/"><img src="https://img.shields.io/badge/Goose-Block-000000?logo=goose&logoColor=white" alt="Goose"></a>
+  <a href="https://postman.com"><img src="https://img.shields.io/badge/Postman-client-FF6C37?logo=postman&logoColor=white" alt="Postman"></a>
+  <a href="https://www.mcpjam.com/"><img src="https://img.shields.io/badge/MCPJam-client-8B5CF6" alt="MCPJam"></a>
+</p>
+
+> MCP Apps is an extension to the [core MCP specification](https://modelcontextprotocol.io/specification). Host support varies — see the [clients page](https://modelcontextprotocol.io/clients) for the full list.
 
 ## Why MCP Apps?
 
