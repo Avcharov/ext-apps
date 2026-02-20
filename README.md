@@ -28,8 +28,8 @@
 </p>
 
 <p align="center">
-  <img src="media/claude-colorpicker-apps.gif" alt="MCP Apps demo" width="600">
-  <br><em>Color picker built with MCP Apps, running in Claude</em>
+  <img src="media/excalidraw.gif" alt="MCP Apps demo" width="600">
+  <br><em>Excalidraw built with MCP Apps, running in Claude</em>
 </p>
 
 ## Table of Contents
@@ -46,10 +46,14 @@
 
 ## Build with Agent Skills
 
-The fastest way to build an MCP App is to let your AI coding agent do it. This repo ships two [Agent Skills](https://agentskills.io/) — install them once, then just ask:
+The fastest way to build an MCP App is to let your AI coding agent do it. This repo ships four [Agent Skills](https://agentskills.io/) — install them once, then just ask:
 
-- **"Create an MCP App"** — scaffolds a new MCP App with an interactive UI from scratch
-- **"Migrate from OpenAI Apps SDK"** — converts an existing OpenAI App to use MCP Apps
+| Skill | What it does | Try it |
+| ----- | ------------ | ------ |
+| [`create-mcp-app`](./plugins/mcp-apps/skills/create-mcp-app/SKILL.md) | Scaffolds a new MCP App with an interactive UI from scratch | _"Create an MCP App"_ |
+| [`migrate-oai-app`](./plugins/mcp-apps/skills/migrate-oai-app/SKILL.md) | Converts an existing OpenAI App to use MCP Apps | _"Migrate from OpenAI Apps SDK"_ |
+| [`add-app-to-server`](./plugins/mcp-apps/skills/add-app-to-server/SKILL.md) | Adds interactive UI to an existing MCP server's tools | _"Add UI to my MCP server"_ |
+| [`convert-web-app`](./plugins/mcp-apps/skills/convert-web-app/SKILL.md) | Converts an existing web app into an MCP App | _"Convert my web app to an MCP App"_ |
 
 ### Install the Skills
 
@@ -62,7 +66,7 @@ The fastest way to build an MCP App is to let your AI coding agent do it. This r
 
 **Other agents** — any AI coding agent that supports [Agent Skills](https://agentskills.io/) can use these skills. See the [agent skills guide](./docs/agent-skills.md) for manual installation instructions.
 
-Once installed, verify by asking your agent _"What skills do you have?"_ — you should see `create-mcp-app` and `migrate-oai-app` in the list. Then just ask it to create or migrate an app and it will guide you through the rest.
+Once installed, verify by asking your agent _"What skills do you have?"_ — you should see `create-mcp-app`, `migrate-oai-app`, `add-app-to-server`, and `convert-web-app` in the list. Then just ask it to create or migrate an app and it will guide you through the rest.
 
 ## Why MCP Apps?
 
@@ -144,403 +148,35 @@ Then open http://localhost:8080/.
 
 #### With MCP Clients
 
-To use these examples with MCP clients that support the stdio transport (such as Claude Desktop or VS Code), add this MCP server configuration to your client's settings:
-
-<details>
-<summary>MCP client configuration for all examples (using stdio)</summary>
+Every Node.js example is published as `@modelcontextprotocol/server-<name>`. To add one to an MCP client that supports stdio (Claude Desktop, VS Code, etc.), use this pattern:
 
 ```json
 {
   "mcpServers": {
-    "basic-react": {
+    "<name>": {
       "command": "npx",
-      "args": [
-        "-y",
-        "--silent",
-        "--registry=https://registry.npmjs.org/",
-        "@modelcontextprotocol/server-basic-react",
-        "--stdio"
-      ]
-    },
-    "basic-vanillajs": {
-      "command": "npx",
-      "args": [
-        "-y",
-        "--silent",
-        "--registry=https://registry.npmjs.org/",
-        "@modelcontextprotocol/server-basic-vanillajs",
-        "--stdio"
-      ]
-    },
-    "basic-vue": {
-      "command": "npx",
-      "args": [
-        "-y",
-        "--silent",
-        "--registry=https://registry.npmjs.org/",
-        "@modelcontextprotocol/server-basic-vue",
-        "--stdio"
-      ]
-    },
-    "basic-svelte": {
-      "command": "npx",
-      "args": [
-        "-y",
-        "--silent",
-        "--registry=https://registry.npmjs.org/",
-        "@modelcontextprotocol/server-basic-svelte",
-        "--stdio"
-      ]
-    },
-    "basic-preact": {
-      "command": "npx",
-      "args": [
-        "-y",
-        "--silent",
-        "--registry=https://registry.npmjs.org/",
-        "@modelcontextprotocol/server-basic-preact",
-        "--stdio"
-      ]
-    },
-    "basic-solid": {
-      "command": "npx",
-      "args": [
-        "-y",
-        "--silent",
-        "--registry=https://registry.npmjs.org/",
-        "@modelcontextprotocol/server-basic-solid",
-        "--stdio"
-      ]
-    },
-    "budget-allocator": {
-      "command": "npx",
-      "args": [
-        "-y",
-        "--silent",
-        "--registry=https://registry.npmjs.org/",
-        "@modelcontextprotocol/server-budget-allocator",
-        "--stdio"
-      ]
-    },
-    "cohort-heatmap": {
-      "command": "npx",
-      "args": [
-        "-y",
-        "--silent",
-        "--registry=https://registry.npmjs.org/",
-        "@modelcontextprotocol/server-cohort-heatmap",
-        "--stdio"
-      ]
-    },
-    "customer-segmentation": {
-      "command": "npx",
-      "args": [
-        "-y",
-        "--silent",
-        "--registry=https://registry.npmjs.org/",
-        "@modelcontextprotocol/server-customer-segmentation",
-        "--stdio"
-      ]
-    },
-    "map": {
-      "command": "npx",
-      "args": [
-        "-y",
-        "--silent",
-        "--registry=https://registry.npmjs.org/",
-        "@modelcontextprotocol/server-map",
-        "--stdio"
-      ]
-    },
-    "pdf": {
-      "command": "npx",
-      "args": [
-        "-y",
-        "--silent",
-        "--registry=https://registry.npmjs.org/",
-        "@modelcontextprotocol/server-pdf",
-        "--stdio"
-      ]
-    },
-    "scenario-modeler": {
-      "command": "npx",
-      "args": [
-        "-y",
-        "--silent",
-        "--registry=https://registry.npmjs.org/",
-        "@modelcontextprotocol/server-scenario-modeler",
-        "--stdio"
-      ]
-    },
-    "shadertoy": {
-      "command": "npx",
-      "args": [
-        "-y",
-        "--silent",
-        "--registry=https://registry.npmjs.org/",
-        "@modelcontextprotocol/server-shadertoy",
-        "--stdio"
-      ]
-    },
-    "sheet-music": {
-      "command": "npx",
-      "args": [
-        "-y",
-        "--silent",
-        "--registry=https://registry.npmjs.org/",
-        "@modelcontextprotocol/server-sheet-music",
-        "--stdio"
-      ]
-    },
-    "system-monitor": {
-      "command": "npx",
-      "args": [
-        "-y",
-        "--silent",
-        "--registry=https://registry.npmjs.org/",
-        "@modelcontextprotocol/server-system-monitor",
-        "--stdio"
-      ]
-    },
-    "threejs": {
-      "command": "npx",
-      "args": [
-        "-y",
-        "--silent",
-        "--registry=https://registry.npmjs.org/",
-        "@modelcontextprotocol/server-threejs",
-        "--stdio"
-      ]
-    },
-    "transcript": {
-      "command": "npx",
-      "args": [
-        "-y",
-        "--silent",
-        "--registry=https://registry.npmjs.org/",
-        "@modelcontextprotocol/server-transcript",
-        "--stdio"
-      ]
-    },
-    "video-resource": {
-      "command": "npx",
-      "args": [
-        "-y",
-        "--silent",
-        "--registry=https://registry.npmjs.org/",
-        "@modelcontextprotocol/server-video-resource",
-        "--stdio"
-      ]
-    },
-    "wiki-explorer": {
-      "command": "npx",
-      "args": [
-        "-y",
-        "--silent",
-        "--registry=https://registry.npmjs.org/",
-        "@modelcontextprotocol/server-wiki-explorer",
-        "--stdio"
-      ]
-    },
-    "qr": {
-      "command": "uv",
-      "args": [
-        "run",
-        "/path/to/ext-apps/examples/qr-server/server.py",
-        "--stdio"
-      ]
-    },
-    "say": {
-      "command": "uv",
-      "args": [
-        "run",
-        "--default-index",
-        "https://pypi.org/simple",
-        "https://raw.githubusercontent.com/modelcontextprotocol/ext-apps/refs/heads/main/examples/say-server/server.py",
-        "--stdio"
-      ]
+      "args": ["-y", "@modelcontextprotocol/server-<name>", "--stdio"]
     }
   }
 }
 ```
 
-</details>
-
-> [!NOTE]
-> The `qr` server requires cloning the repository first. See [qr-server README](https://github.com/modelcontextprotocol/ext-apps/tree/main/examples/qr-server) for details.
+For example, to add the map server: `@modelcontextprotocol/server-map`. The Python examples (`qr-server`, `say-server`) use `uv run` instead — see their READMEs for details.
 
 #### Local Development
 
-To test local modifications with MCP clients, first clone and install the repository:
-
-```bash
-git clone https://github.com/modelcontextprotocol/ext-apps.git
-cd ext-apps
-npm install
-```
-
-Then configure your MCP client to build and run the local server. Replace `~/code/ext-apps` with your actual clone path:
-
-<details>
-<summary>MCP client configuration for local development (all examples)</summary>
+To test local modifications with an MCP client, clone the repo, install, then point your client at a local build:
 
 ```json
 {
   "mcpServers": {
-    "basic-react": {
+    "<name>": {
       "command": "bash",
-      "args": [
-        "-c",
-        "cd ~/code/ext-apps/examples/basic-server-react && npm run build >&2 && node dist/index.js --stdio"
-      ]
-    },
-    "basic-vanillajs": {
-      "command": "bash",
-      "args": [
-        "-c",
-        "cd ~/code/ext-apps/examples/basic-server-vanillajs && npm run build >&2 && node dist/index.js --stdio"
-      ]
-    },
-    "basic-vue": {
-      "command": "bash",
-      "args": [
-        "-c",
-        "cd ~/code/ext-apps/examples/basic-server-vue && npm run build >&2 && node dist/index.js --stdio"
-      ]
-    },
-    "basic-svelte": {
-      "command": "bash",
-      "args": [
-        "-c",
-        "cd ~/code/ext-apps/examples/basic-server-svelte && npm run build >&2 && node dist/index.js --stdio"
-      ]
-    },
-    "basic-preact": {
-      "command": "bash",
-      "args": [
-        "-c",
-        "cd ~/code/ext-apps/examples/basic-server-preact && npm run build >&2 && node dist/index.js --stdio"
-      ]
-    },
-    "basic-solid": {
-      "command": "bash",
-      "args": [
-        "-c",
-        "cd ~/code/ext-apps/examples/basic-server-solid && npm run build >&2 && node dist/index.js --stdio"
-      ]
-    },
-    "budget-allocator": {
-      "command": "bash",
-      "args": [
-        "-c",
-        "cd ~/code/ext-apps/examples/budget-allocator-server && npm run build >&2 && node dist/index.js --stdio"
-      ]
-    },
-    "cohort-heatmap": {
-      "command": "bash",
-      "args": [
-        "-c",
-        "cd ~/code/ext-apps/examples/cohort-heatmap-server && npm run build >&2 && node dist/index.js --stdio"
-      ]
-    },
-    "customer-segmentation": {
-      "command": "bash",
-      "args": [
-        "-c",
-        "cd ~/code/ext-apps/examples/customer-segmentation-server && npm run build >&2 && node dist/index.js --stdio"
-      ]
-    },
-    "map": {
-      "command": "bash",
-      "args": [
-        "-c",
-        "cd ~/code/ext-apps/examples/map-server && npm run build >&2 && node dist/index.js --stdio"
-      ]
-    },
-    "pdf": {
-      "command": "bash",
-      "args": [
-        "-c",
-        "cd ~/code/ext-apps/examples/pdf-server && npm run build >&2 && node dist/index.js --stdio"
-      ]
-    },
-    "scenario-modeler": {
-      "command": "bash",
-      "args": [
-        "-c",
-        "cd ~/code/ext-apps/examples/scenario-modeler-server && npm run build >&2 && node dist/index.js --stdio"
-      ]
-    },
-    "shadertoy": {
-      "command": "bash",
-      "args": [
-        "-c",
-        "cd ~/code/ext-apps/examples/shadertoy-server && npm run build >&2 && node dist/index.js --stdio"
-      ]
-    },
-    "sheet-music": {
-      "command": "bash",
-      "args": [
-        "-c",
-        "cd ~/code/ext-apps/examples/sheet-music-server && npm run build >&2 && node dist/index.js --stdio"
-      ]
-    },
-    "system-monitor": {
-      "command": "bash",
-      "args": [
-        "-c",
-        "cd ~/code/ext-apps/examples/system-monitor-server && npm run build >&2 && node dist/index.js --stdio"
-      ]
-    },
-    "threejs": {
-      "command": "bash",
-      "args": [
-        "-c",
-        "cd ~/code/ext-apps/examples/threejs-server && npm run build >&2 && node dist/index.js --stdio"
-      ]
-    },
-    "transcript": {
-      "command": "bash",
-      "args": [
-        "-c",
-        "cd ~/code/ext-apps/examples/transcript-server && npm run build >&2 && node dist/index.js --stdio"
-      ]
-    },
-    "video-resource": {
-      "command": "bash",
-      "args": [
-        "-c",
-        "cd ~/code/ext-apps/examples/video-resource-server && npm run build >&2 && node dist/index.js --stdio"
-      ]
-    },
-    "wiki-explorer": {
-      "command": "bash",
-      "args": [
-        "-c",
-        "cd ~/code/ext-apps/examples/wiki-explorer-server && npm run build >&2 && node dist/index.js --stdio"
-      ]
-    },
-    "qr": {
-      "command": "bash",
-      "args": [
-        "-c",
-        "uv run ~/code/ext-apps/examples/qr-server/server.py --stdio"
-      ]
-    },
-    "say": {
-      "command": "bash",
-      "args": [
-        "-c",
-        "uv run --index https://pypi.org/simple ~/code/ext-apps/examples/say-server/server.py --stdio"
-      ]
+      "args": ["-c", "cd ~/code/ext-apps/examples/<name>-server && npm run build >&2 && node dist/index.js --stdio"]
     }
   }
 }
 ```
-
-</details>
-
-This configuration rebuilds each server on launch, ensuring your local changes are picked up.
 
 ## Specification
 
