@@ -2,7 +2,7 @@ import { RESOURCE_MIME_TYPE, getToolUiResourceUri, type McpUiSandboxProxyReadyNo
 import { Client } from "@modelcontextprotocol/sdk/client/index.js";
 import { SSEClientTransport } from "@modelcontextprotocol/sdk/client/sse.js";
 import { StreamableHTTPClientTransport } from "@modelcontextprotocol/sdk/client/streamableHttp.js";
-import { ElicitRequestSchema, ElicitResultSchema, type CallToolResult, type Resource, type Tool } from "@modelcontextprotocol/sdk/types.js";
+import type { CallToolResult, Resource, Tool } from "@modelcontextprotocol/sdk/types.js";
 import { getTheme, onThemeChange } from "./theme";
 import { HOST_STYLE_VARIABLES } from "./host-styles";
 
@@ -45,25 +45,7 @@ export async function connectToServer(serverUrl: URL): Promise<ServerInfo> {
   const resources = new Map(resourcesList.resources.map((r) => [r.uri, r]));
   log.info("Server resources:", Array.from(resources.keys()));
 
-  // Buffer elicitation/create requests until the AppBridge is ready.
-  // The promise is reset after each setBridge() call so it works across
-  // multiple sequential tool invocations.
-  let resolveBridge!: (bridge: AppBridge) => void;
-  let bridgePromise = new Promise<AppBridge>((resolve) => { resolveBridge = resolve; });
-
-  const setBridge = (bridge: AppBridge) => {
-    resolveBridge(bridge);
-    bridgePromise = new Promise<AppBridge>((resolve) => { resolveBridge = resolve; });
-  };
-
-  client.setRequestHandler(ElicitRequestSchema, async (request, extra) => {
-    const bridge = await bridgePromise;
-    return bridge.request(
-      { method: "elicitation/create", params: request.params },
-      ElicitResultSchema,
-      { signal: extra.signal },
-    );
-  });
+  const setBridge = AppBridge.setupElicitationForwarding(client);
 
   return { name, client, tools, resources, appHtmlCache: new Map(), setBridge };
 }
