@@ -524,6 +524,13 @@ UI iframes can use the following subset of standard MCP protocol messages:
 
 - `notifications/message` - Log messages to host
 
+**Elicitation:**
+
+- `elicitation/create` - Request structured user input from the app (server → host → app). The MCP server sends this request to the host, which forwards it to the app. The app presents the form described by `requestedSchema` to the user and returns an `ElicitResult`:
+  - `{ action: "accept", content: {...} }` — user submitted the form
+  - `{ action: "cancel" }` — user dismissed without completing
+  - `{ action: "decline" }` — user explicitly declined to provide input
+
 **Lifecycle:**
 
 - `ui/initialize` → `ui/notifications/initialized` - MCP-like handshake (replaces custom iframe-ready pattern in MCP-UI)
