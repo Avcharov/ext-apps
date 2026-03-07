@@ -107,9 +107,15 @@ const loadingIndicatorArc = loadingIndicatorEl.querySelector(
 ) as SVGCircleElement;
 const elicitationEl = document.getElementById("elicitation")!;
 const elicitationMessageEl = document.getElementById("elicitation-message")!;
-const elicitationUrlEl = document.getElementById("elicitation-url") as HTMLInputElement;
-const elicitationSubmitBtn = document.getElementById("elicitation-submit") as HTMLButtonElement;
-const elicitationCancelBtn = document.getElementById("elicitation-cancel") as HTMLButtonElement;
+const elicitationUrlEl = document.getElementById(
+  "elicitation-url",
+) as HTMLInputElement;
+const elicitationSubmitBtn = document.getElementById(
+  "elicitation-submit",
+) as HTMLButtonElement;
+const elicitationCancelBtn = document.getElementById(
+  "elicitation-cancel",
+) as HTMLButtonElement;
 
 // Track current display mode
 let currentDisplayMode: "inline" | "fullscreen" = "inline";

@@ -34,14 +34,19 @@ export async function startStreamableHTTPServer(
   const port = parseInt(process.env.PORT ?? "3001", 10);
 
   const app = createMcpExpressApp({ host: "0.0.0.0" });
-  app.use(cors({
-    exposedHeaders: ["mcp-session-id"],
-  }));
+  app.use(
+    cors({
+      exposedHeaders: ["mcp-session-id"],
+    }),
+  );
 
   // Stateful mode: one server + transport per session.
   // Required for server-initiated requests (e.g. elicitation/create) which
   // need the client's response to arrive on the same transport instance.
-  const sessions = new Map<string, { server: McpServer; transport: StreamableHTTPServerTransport }>();
+  const sessions = new Map<
+    string,
+    { server: McpServer; transport: StreamableHTTPServerTransport }
+  >();
 
   app.all("/mcp", async (req: Request, res: Response) => {
     // Check for existing session
@@ -58,7 +63,10 @@ export async function startStreamableHTTPServer(
       if (!isInitialize) {
         res.status(400).json({
           jsonrpc: "2.0",
-          error: { code: -32000, message: "Bad Request: No valid session. Send initialize first." },
+          error: {
+            code: -32000,
+            message: "Bad Request: No valid session. Send initialize first.",
+          },
           id: null,
         });
         return;

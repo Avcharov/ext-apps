@@ -1571,9 +1571,13 @@ export class AppBridge extends Protocol<
    * setBridge(appBridge);
    * ```
    */
-  static setupElicitationForwarding(client: Client): (bridge: AppBridge) => void {
+  static setupElicitationForwarding(
+    client: Client,
+  ): (bridge: AppBridge) => void {
     let resolveBridge!: (bridge: AppBridge) => void;
-    let bridgePromise = new Promise<AppBridge>((resolve) => { resolveBridge = resolve; });
+    let bridgePromise = new Promise<AppBridge>((resolve) => {
+      resolveBridge = resolve;
+    });
 
     client.setRequestHandler(ElicitRequestSchema, async (request, extra) => {
       const bridge = await bridgePromise;
@@ -1586,7 +1590,9 @@ export class AppBridge extends Protocol<
 
     return (bridge: AppBridge) => {
       resolveBridge(bridge);
-      bridgePromise = new Promise<AppBridge>((resolve) => { resolveBridge = resolve; });
+      bridgePromise = new Promise<AppBridge>((resolve) => {
+        resolveBridge = resolve;
+      });
     };
   }
 }

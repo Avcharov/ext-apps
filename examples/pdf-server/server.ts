@@ -621,10 +621,7 @@ Accepts:
 - Local files under directories provided by the client as MCP roots
 - Any remote PDF accessible via HTTPS`,
       inputSchema: {
-        url: z
-          .string()
-          .optional()
-          .describe("PDF URL or local file path"),
+        url: z.string().optional().describe("PDF URL or local file path"),
         page: z.number().min(1).default(1).describe("Initial page"),
       },
       outputSchema: z.object({
@@ -653,7 +650,8 @@ Accepts:
                     url: {
                       type: "string" as const,
                       title: "PDF URL",
-                      description: "Any remote PDF accessible via HTTPS, or a local file path",
+                      description:
+                        "Any remote PDF accessible via HTTPS, or a local file path",
                     },
                   },
                   required: ["url"],
